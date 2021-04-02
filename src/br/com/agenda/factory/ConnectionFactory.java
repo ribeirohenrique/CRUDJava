@@ -19,9 +19,9 @@ public class ConnectionFactory {
     public static Connection createConnectionToMariaDB() throws Exception {
         Class.forName("org.mariadb.jdbc.Driver");
 
-        Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+        Connection connect = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
 
-        return connection;
+        return connect;
     }
 
     public static void main(String[] args) throws Exception {

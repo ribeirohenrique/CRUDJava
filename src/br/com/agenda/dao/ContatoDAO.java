@@ -2,7 +2,6 @@ package br.com.agenda.dao;
 
 import br.com.agenda.factory.ConnectionFactory;
 import br.com.agenda.model.Contato;
-import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -28,7 +27,7 @@ public class ContatoDAO {
         PreparedStatement pstm = null;
 
         try {
-            //Criar uma conexão com o bando de dados
+            //Criar uma conexão com o banco de dados
             conn = ConnectionFactory.createConnectionToMariaDB();
 
             //Criar uma PreparedStatement para executar uma query
@@ -65,7 +64,7 @@ public class ContatoDAO {
 
     public List<Contato> getContatos() {
         String sql = "SELECT * FROM contatos";
-        List<Contato> contatos = new ArrayList<Contato>();
+        List<Contato> contatos = new ArrayList<>();
 
         Connection conn = null;
         PreparedStatement pstm = null;
@@ -113,5 +112,45 @@ public class ContatoDAO {
             }
         }
         return contatos;
+    }
+
+    public void update(Contato contato, int id) {
+
+        String sql = "UPDATE contatos SET nome = ?, idade = ?, dataCadastro = ? where id = ?";
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            //Criar uma conexão com o banco de dados
+            conn = ConnectionFactory.createConnectionToMariaDB();
+
+            //Criar uma PreparedStatement para executar uma query
+            pstm = conn.prepareStatement(sql);
+
+            //Adicionar os valores que são esperados pela query
+            pstm.setString(1, contato.getNome());
+            pstm.setInt(2, contato.getIdade());
+            pstm.setDate(3, new Date(contato.getDataCadastro().getTime()));
+            pstm.setInt(4, id);
+
+            //Executar a query
+            pstm.execute();
+            System.out.println("Query de update executada com sucesso!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
